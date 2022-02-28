@@ -29,10 +29,14 @@ namespace Lms.Api.Controllers
 
         // GET: api/Modules
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ModuleDto>>> GetModule()
+        public async Task<ActionResult<IEnumerable<ModuleDto>>> GetModule(string search = "")
         {
-            var moduleDto = mapper.ProjectTo<ModuleDto>(_context.Module);
-            return await moduleDto.ToListAsync();
+            var moduleDto = mapper.ProjectTo<ModuleDto>(_context.Module.Where(m => m.Title.Contains(search)));
+            
+            //if (moduleDto.Count() == 0)
+              //  return NotFound();
+
+            return Ok(await moduleDto.ToListAsync());
         }
         // GET: api/Modules/5
         [HttpGet("{id}")]

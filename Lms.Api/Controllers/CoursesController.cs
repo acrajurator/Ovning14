@@ -28,10 +28,20 @@ namespace Lms.Api.Controllers
 
         // GET: api/Courses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CourseDto>>> GetCourse()
+        public async Task<ActionResult<IEnumerable<CourseDto>>> GetCourse(bool includeModules = false)
         {
-           var courseDto = mapper.ProjectTo<CourseDto>(_context.Course);
-            return Ok(await courseDto.ToListAsync());
+            if (includeModules)
+            {
+                var courseDto = mapper.ProjectTo<CourseWithModuleDto>(_context.Course.Include(m => m.Modules));
+                return Ok(await courseDto.ToListAsync());
+
+            }
+            else
+            {
+                var courseDto = mapper.ProjectTo<CourseDto>(_context.Course.Include(m => m.Modules));
+
+                return Ok(await courseDto.ToListAsync());
+            }
         }
 
         // GET: api/Courses/5

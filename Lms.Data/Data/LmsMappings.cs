@@ -12,12 +12,13 @@ namespace Lms.Data.Data
         {
 
             CreateMap<Course, CourseDto>().ReverseMap();
-            CreateMap<Module, ModuleDto>().ReverseMap();
+            CreateMap<Course, CourseWithModuleDto>().ReverseMap();
+            CreateMap<Module, ModuleDto>().ReverseMap(); 
             CreateMap<JsonPatchDocument<CourseDto>, JsonPatchDocument<Course>>().ReverseMap();
             CreateMap<JsonPatchDocument<ModuleDto>, JsonPatchDocument<Module>>().ReverseMap();
             CreateMap<Operation<CourseDto>, Operation<Course>>();
             CreateMap<Operation<ModuleDto>, Operation<Module>>();
-            ;
+            
 
 
         }
