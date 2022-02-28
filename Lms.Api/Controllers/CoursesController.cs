@@ -75,6 +75,7 @@ namespace Lms.Api.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok(course);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -94,8 +95,10 @@ namespace Lms.Api.Controllers
         // POST: api/Courses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Course>> PostCourse(Course course)
+        public async Task<ActionResult<Course>> PostCourse(CourseDto courseDto)
         {
+
+            var course = mapper.Map<Course>(courseDto);
             _context.Course.Add(course);
             await _context.SaveChangesAsync();
 
