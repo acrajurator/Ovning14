@@ -10,6 +10,7 @@ using Lms.Data.Data;
 using Lms.Core.Entities;
 using AutoMapper;
 using Lms.Core.Dto;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Lms.Api.Controllers
 {
@@ -106,7 +107,29 @@ namespace Lms.Api.Controllers
 
             return NoContent();
         }
+        [HttpPatch("{moduleId}")]
+        public async Task<ActionResult<CourseDto>> PatchModule(int moduleId, JsonPatchDocument<ModuleDto> patchDocument)
+        {
+            try
+            {
+                //nodes collection is an in memory list of nodes for this example
+                var result = await _context.Module.FirstOrDefaultAsync(n => n.Id == moduleId);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
 
+                var moduleDto = mapper.Map<JsonPatchDocument<Module>>(patchDocument);
+                moduleDto.ApplyTo(result, ModelState);
+                return NoContent();
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+
+        }
         private bool ModuleExists(int id)
         {
             return _context.Module.Any(e => e.Id == id);

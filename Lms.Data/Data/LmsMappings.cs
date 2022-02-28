@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Lms.Core.Dto;
 using Lms.Core.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Lms.Data.Data
 {
@@ -9,8 +10,10 @@ namespace Lms.Data.Data
         public LmsMappings()
         {
 
-            CreateMap<Course, CourseDto>();
-            CreateMap<Module, ModuleDto>();
+            CreateMap<Course, CourseDto>().ReverseMap();
+            CreateMap<Module, ModuleDto>().ReverseMap();
+            CreateMap<JsonPatchDocument<CourseDto>, JsonPatchDocument<Course>>().ReverseMap();
+            CreateMap<JsonPatchDocument<ModuleDto>, JsonPatchDocument<Module>>().ReverseMap();
 
 
         }
