@@ -110,27 +110,35 @@ namespace Lms.Api.Controllers
         [HttpPatch("{courseId}")]
         public async Task<ActionResult<CourseDto>> PatchCourse(int courseId, JsonPatchDocument<CourseDto> patchDocument)
         {
-            try
-            {
-                //nodes collection is an in memory list of nodes for this example
-                var result = await _context.Course.FirstOrDefaultAsync(n => n.Id == courseId);
-                if (result == null)
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+           // var dto = new CourseDto();
+            //patchDocument.ApplyTo(dto);
+            var entity = await _context.Course.FirstOrDefaultAsync(c => c.Id == courseId);
+
+                if (entity == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
-                var courseDto = mapper.Map<JsonPatchDocument<Course>>(patchDocument);
-                courseDto.ApplyTo(result, ModelState);
-                return NoContent();
+                var patchEntity = mapper.Map<JsonPatchDocument<Course>>(patchDocument);
+                patchEntity.ApplyTo(entity, ModelState);
+            try
+            {
+                await _context.SaveChangesAsync();
             }
-            catch 
+            catch
             {
                 return StatusCode(500);
             }
 
+                return Ok(entity);
+            
+
+
 
         }
-            private bool CourseExists(int id)
+        private bool CourseExists(int id)
         {
             return _context.Course.Any(e => e.Id == id);
         }
